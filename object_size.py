@@ -51,7 +51,7 @@ pixelsPerMetric = None
 # loop over the contours individually
 for c in cnts:
 	# if the contour is not sufficiently large, ignore it
-	if cv2.contourArea(c) < 100:
+	if cv2.contourArea(c) < 50:
 		continue
 
 	# compute the rotated bounding box of the contour
@@ -114,13 +114,13 @@ for c in cnts:
 	
 
 	# draw the object sizes on the image
-	cv2.putText(orig, "{:.1f}in".format(dimA),
+	cv2.putText(orig, "{:.2f}in".format(dimA),
 		(int(tltrX - 15), int(tltrY - 10)), cv2.FONT_HERSHEY_SIMPLEX,
 		0.65, (255, 255, 255), 2)
-	cv2.putText(orig, "{:.1f}in".format(dimB),
+	cv2.putText(orig, "{:.2f}in".format(dimB),
 		(int(trbrX + 10), int(trbrY)), cv2.FONT_HERSHEY_SIMPLEX,
 		0.65, (255, 255, 255), 2)
-	cv2.putText(orig, "{:.1f}in^2".format(area),
+	cv2.putText(orig, "{:.2f}in^2".format(area),
 		(int(trbrX + 45), int(trbrY + 45)), cv2.FONT_HERSHEY_SIMPLEX,
 		0.65, (255, 255, 255), 2)
 
