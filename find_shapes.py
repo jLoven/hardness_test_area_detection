@@ -1,3 +1,7 @@
+# Jackie Loven
+# 3 March 2017
+# Adapted from 
+
 # USAGE
 # python find_shapes.py --image shapes.png
 
@@ -20,7 +24,7 @@ upper = np.array([15, 15, 15])
 shapeMask = cv2.inRange(image, lower, upper)
 
 # find the contours in the mask
-(cnts, _) = cv2.findContours(shapeMask.copy(), cv2.RETR_EXTERNAL,
+(cnts, _) = cv2.findContours(shapeMask, cv2.RETR_EXTERNAL,
 	cv2.CHAIN_APPROX_SIMPLE)
 print "I found %d black shapes" % (len(cnts))
 cv2.imshow("Mask", shapeMask)

@@ -54,8 +54,14 @@ for c in cnts:
 	if cv2.contourArea(c) < 50:
 		continue
 
-	# compute the rotated bounding box of the contour
+	# get the countour of the indent and draw it on the image
+	epsilon = 0.1 * cv2.arcLength(c, True)
+	approx = cv2.approxPolyDP(c, epsilon, True) # This uses the Douglas-Peucker algorithm
 	orig = image.copy()
+	cv2.drawContours(orig, [approx], -1, (255, 192, 203), 2)
+
+	# compute the rotated bounding box of the contour
+	
 	box = cv2.minAreaRect(c)
 	box = cv2.cv.BoxPoints(box) if imutils.is_cv2() else cv2.boxPoints(box)
 	box = np.array(box, dtype="int")
@@ -65,7 +71,7 @@ for c in cnts:
 	# order, then draw the outline of the rotated bounding
 	# box
 	box = perspective.order_points(box)
-	cv2.drawContours(orig, [box.astype("int")], -1, (0, 255, 0), 2)
+	#cv2.drawContours(orig, [box.astype("int")], -1, (0, 255, 0), 2)
 
 	# loop over the original points and draw them
 	for (x, y) in box:
@@ -90,10 +96,8 @@ for c in cnts:
 	cv2.circle(orig, (int(trbrX), int(trbrY)), 5, (255, 0, 0), -1)
 
 	# draw lines between the midpoints
-	cv2.line(orig, (int(tltrX), int(tltrY)), (int(blbrX), int(blbrY)),
-		(255, 0, 255), 2)
-	cv2.line(orig, (int(tlblX), int(tlblY)), (int(trbrX), int(trbrY)),
-		(255, 0, 255), 2)
+	#cv2.line(orig, (int(tltrX), int(tltrY)), (int(blbrX), int(blbrY)), (255, 0, 255), 2)
+	#cv2.line(orig, (int(tlblX), int(tlblY)), (int(trbrX), int(trbrY)), (255, 0, 255), 2)
 
 	# compute the Euclidean distance between the midpoints
 	dA = dist.euclidean((tltrX, tltrY), (blbrX, blbrY))
