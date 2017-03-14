@@ -32,6 +32,12 @@ erodeImage2 = cv2.erode(dilateImage1, kernel, iterations = 1)
 clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
 claheImage = clahe.apply(erodeImage2)
 
+# 5. Open, close
+erodeImage3 = cv2.erode(claheImage, kernel, iterations = 1)
+dilateImage2 = cv2.dilate(erodeImage3, kernel, iterations = 1)
+
+# 6. Adaptive Gaussian thresholding
+
 
 
 
