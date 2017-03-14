@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-img = cv2.imread('images/5.png',0)
+img = cv2.imread('images/clahe_1.jpg',0)
 
 #  Grab a histogram of original image
 hist, bins = np.histogram(img.flatten(),256,[0,256])
@@ -20,7 +20,7 @@ cdf_m = np.ma.masked_equal(cdf,0)
 cdf_m = (cdf_m - cdf_m.min())*255/(cdf_m.max()-cdf_m.min())
 cdf = np.ma.filled(cdf_m,0).astype('uint8')
 img2 = cdf[img]
-cv2.imwrite('generated_images/5_equalized.png', img2)
+cv2.imwrite('generated_images/clahe_1_equalized.png', img2)
 
 # Show the updated histogram
 hist2, bins2 = np.histogram(img2.flatten(),256,[0,256])
