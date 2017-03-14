@@ -16,11 +16,15 @@ plt.legend(('cdf','histogram'), loc = 'upper left')
 plt.show()
 
 # Equalize original image
-cdf_m = np.ma.masked_equal(cdf,0)
-cdf_m = (cdf_m - cdf_m.min())*255/(cdf_m.max()-cdf_m.min())
-cdf = np.ma.filled(cdf_m,0).astype('uint8')
-img2 = cdf[img]
-cv2.imwrite('generated_images/clahe_1_equalized.png', img2)
+# cdf_m = np.ma.masked_equal(cdf,0)
+# cdf_m = (cdf_m - cdf_m.min())*255/(cdf_m.max()-cdf_m.min())
+# cdf = np.ma.filled(cdf_m,0).astype('uint8')
+# img2 = cdf[img]
+
+# create a CLAHE object
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+img2 = clahe.apply(img)
+cv2.imwrite('generated_images/clahe_2_equalized.png', img2)
 
 # Show the updated histogram
 hist2, bins2 = np.histogram(img2.flatten(),256,[0,256])
