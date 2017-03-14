@@ -37,10 +37,3 @@ plt.xlim([0,256])
 plt.legend(('cdf2','histogram2'), loc = 'upper left')
 plt.show()
 
-
-
-
-
-
-
-

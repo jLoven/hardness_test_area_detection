@@ -28,7 +28,9 @@ dilateImage1 = cv2.dilate(erodeImage1, kernel, iterations = 1)
 erodeImage2 = cv2.erode(dilateImage1, kernel, iterations = 1)
 
 # 4. CLAHE (Contrast Limited Adaptive Histogram Equalization)
-# https://goo.gl/OjnwZC for a good explanation
+# https://goo.gl/OjnwZC for a good explanation, it improves contrast
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+claheImage = clahe.apply(erodeImage2)
 
 
 
