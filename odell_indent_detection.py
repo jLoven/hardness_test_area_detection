@@ -4,6 +4,7 @@
 
 import cv2
 import copy
+import imutils
 
 
 def display(img, name="img"):
@@ -37,9 +38,10 @@ def close_image(img, kernel_radius = 5, itera = 1):
 
 
 # Toggle if you want to see the steps or not.
-debug = True
+debug = False
+printStatements = True
 
-img = getFileByName("1.jpg", "src/")
+img = getFileByName("5.png")
 if debug: display(img)
 
 image_copy = copy.deepcopy(img)
@@ -96,17 +98,20 @@ adaptive_thresholded_canny_blur = cv2.GaussianBlur(adaptive_thresholded_canny, (
 if debug: display(adaptive_thresholded_canny_blur, "ady thresh canny blur")
 
 # Now we find the contours we will be applying.
-image, contours, other = cv2.findContours(adaptive_thresholded_canny_blur,cv2.RETR_CCOMP,cv2.CHAIN_APPROX_SIMPLE) # Gather the contours
+contours, other = cv2.findContours(adaptive_thresholded_canny_blur, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE) # Gather the contours
+#contours = contours[0] if imutils.is_cv2() else contours[1]
 long_contours = [] # Create an array for the long edges to be held
+
+
 
 # http://docs.opencv.org/trunk/dd/d49/tutorial_py_contour_features.html
 for cnt in contours:
     # These constants are pretty meh.
     # They are upper and lower bounds for areas contained by and perimiter area of, contours.
-    if 1000<cv2.contourArea(cnt) < 4000 and 200 < cv2.arcLength(cnt, True) < 500:
+    if 500 < cv2.contourArea(cnt) < 5000 and 100 < cv2.arcLength(cnt, True) < 500:
         long_contours.append(cnt) # Record any long contours
-        if debug: print "area: ", cv2.contourArea(cnt)
-        if debug: print "contour perimiter: ", cv2.arcLength(cnt, True)
+        if printStatements: print "area: ", cv2.contourArea(cnt)
+        if printStatements: print "contour perimiter: ", cv2.arcLength(cnt, True)
         if debug: print "circ stat: ", cv2.minEnclosingCircle(cnt)
 
 if debug: print "Long contours found: ", len(long_contours)
@@ -115,7 +120,6 @@ if debug: print "Long contours found: ", len(long_contours)
 # What we're doing here is looking for the ratio of area and perimiter to be 8.
 # We're using squared error of the ratio between area and perimiter's difference from 8.
 long_contours.sort(key=lambda x: (8 - (cv2.contourArea(x) / cv2.arcLength(x, True))) ** 2, reverse=False)
-
 if debug: print "contours: "
 if debug:
     for cnt in long_contours:
