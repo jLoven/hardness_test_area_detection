@@ -108,7 +108,7 @@ long_contours = [] # Create an array for the long edges to be held
 for cnt in contours:
     # These constants are pretty meh.
     # They are upper and lower bounds for areas contained by and perimiter area of, contours.
-    if 500 < cv2.contourArea(cnt) < 5000 and 100 < cv2.arcLength(cnt, True) < 500:
+    if 1000 < cv2.contourArea(cnt) < 4000 and 200 < cv2.arcLength(cnt, True) < 500:
         long_contours.append(cnt) # Record any long contours
         if printStatements: print "area: ", cv2.contourArea(cnt)
         if printStatements: print "contour perimiter: ", cv2.arcLength(cnt, True)
