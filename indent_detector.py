@@ -67,7 +67,7 @@ cannyImage = auto_canny(erodeImage4)
 gaussianBlurImage2 = cv2.GaussianBlur(cannyImage, (7, 7), 0)
 
 # 10. Contour search using perimeter and area
-contours = cv2.findContours(gaussianBlurImage2, 
+cnts = cv2.findContours(gaussianBlurImage2, 
 	cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 (cnts, _) = contours.sort_contours(cnts)
