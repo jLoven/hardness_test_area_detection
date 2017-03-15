@@ -72,6 +72,8 @@ gaussianBlurImage2 = cv2.GaussianBlur(cannyImage, (3, 3), 0)
 # 10. Contour search using perimeter and area
 contours = cv2.findContours(gaussianBlurImage2, 
 	cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+(cnts, _) = contours.sort_contours(cnts)
 large_contours = []
 for cont in contours:
 	if cv2.contourArea(c) > 20 and cv2.arcLength(cont, True) > 30:
