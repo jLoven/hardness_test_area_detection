@@ -13,6 +13,7 @@ ap.add_argument("-i", "--image", required=True,
 	help="path to the input image")
 args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
+imageCopy = image.copy()
 
 # 1. Convert to grayscale
 grayImage = cv2.cvtColor(image.copy(), cv2.COLOR_BGR2GRAY)
@@ -76,10 +77,10 @@ for cont in contours:
 	if cv2.contourArea(c) > 20 and cv2.arcLength(cont, True) > 30:
 		large_contours.append(cont)
 
+large_contours.sort(key=lambda x: (8 - (cv2.contourArea(x) / 
+	cv2.arcLength(x, True))) ** 2, reverse=False)
+cv2.drawContours(imageCopy,[large_contours[0]], 0, (0, 255, 127), 2)
 
-
-cv2.drawContours(image, [c], -1, (255, 192, 203), 3)
-
-cv2.imshow("Image", image)
+cv2.imshow("Image", imageCopy)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
