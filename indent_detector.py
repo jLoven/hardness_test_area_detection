@@ -5,6 +5,8 @@
 import argparse
 import cv2
 import numpy as np
+import imutils
+from imutils import contours
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, 
