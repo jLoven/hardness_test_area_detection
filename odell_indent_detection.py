@@ -41,7 +41,7 @@ def close_image(img, kernel_radius = 5, itera = 1):
 debug = False
 printStatements = True
 
-img = getFileByName("5.png")
+img = getFileByName("from_fb.jpg", "images/")
 if debug: display(img)
 
 image_copy = copy.deepcopy(img)
