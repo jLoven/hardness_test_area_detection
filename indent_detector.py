@@ -12,11 +12,12 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, 
 	help="path to the input image")
 args = vars(ap.parse_args())
-image = cv2.imread(args["image"])
+image = cv2.imread("images/" + args["image"])
 imageCopy = image.copy()
 
 # 1. Convert to grayscale
 grayImage = cv2.cvtColor(image.copy(), cv2.COLOR_BGR2GRAY)
+#invertImage = cv2.bitwise_not(grayImage)
 
 # 2. Simple Gaussian blur
 # window size 7 x 7, exact
@@ -76,7 +77,7 @@ cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 (cnts, _) = contours.sort_contours(cnts)
 large_contours = []
 for cont in cnts:
-	if cv2.contourArea(cont) > 20 and cv2.arcLength(cont, True) > 30:
+	if cv2.contourArea(cont) > 20 and cv2.arcLength(cont, True) > 20:
 		large_contours.append(cont)
 
 large_contours.sort(key=lambda x: (8 - (cv2.contourArea(x) / 

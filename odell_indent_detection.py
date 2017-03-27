@@ -41,7 +41,7 @@ def close_image(img, kernel_radius = 5, itera = 1):
 debug = False
 printStatements = True
 
-img = getFileByName("from_fb.jpg", "images/")
+img = getFileByName("cropped_darkfield.png")
 if debug: display(img)
 
 image_copy = copy.deepcopy(img)
@@ -108,7 +108,7 @@ long_contours = [] # Create an array for the long edges to be held
 for cnt in contours:
     # These constants are pretty meh.
     # They are upper and lower bounds for areas contained by and perimiter area of, contours.
-    if 1000 < cv2.contourArea(cnt) < 4000 and 200 < cv2.arcLength(cnt, True) < 500:
+    if 500 < cv2.contourArea(cnt) < 5000 and 100 < cv2.arcLength(cnt, True) < 5000:
         long_contours.append(cnt) # Record any long contours
         if printStatements: print "area: ", cv2.contourArea(cnt)
         if printStatements: print "contour perimiter: ", cv2.arcLength(cnt, True)
@@ -119,7 +119,7 @@ if debug: print "Long contours found: ", len(long_contours)
 # the 8 below was experimentally determined.
 # What we're doing here is looking for the ratio of area and perimiter to be 8.
 # We're using squared error of the ratio between area and perimiter's difference from 8.
-long_contours.sort(key=lambda x: (8 - (cv2.contourArea(x) / cv2.arcLength(x, True))) ** 2, reverse=False)
+long_contours.sort(key=lambda x: (3 - (cv2.contourArea(x) / cv2.arcLength(x, True))) ** 2, reverse=False)
 if debug: print "contours: "
 if debug:
     for cnt in long_contours:
