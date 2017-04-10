@@ -15,6 +15,19 @@ def display(img, name="img"):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+# Following function is from https://goo.gl/E9F4m8 :
+def auto_canny(image, sigma = 0.93):
+	# compute the median of the single channel pixel intensities
+	v = np.median(image)
+ 
+	# apply automatic Canny edge detection using the computed median
+	lower = int(max(0, (1.0 - sigma) * v))
+	upper = int(min(255, (1.0 + sigma) * v))
+	edged = cv2.Canny(image, lower, upper)
+ 
+	# return the edged image
+	return edged
+
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, 
 	help="path to the input image")
@@ -23,7 +36,8 @@ image = cv2.imread("images/" + args["image"])
 imageCopy = image.copy()
 
 # 1. Convert to grayscale
-grayImage = cv2.cvtColor(image.copy(), cv2.COLOR_BGR2GRAY)
+small = cv2.resize(imageCopy, (0, 0), fx = 0.5, fy = 0.5)
+grayImage = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
 #invertImage = cv2.bitwise_not(grayImage)
 
 # 2. Simple Gaussian blur
@@ -54,34 +68,23 @@ display(erodeImage3, "erodeImage3")
 dilateImage2 = cv2.dilate(erodeImage3, kernel2, iterations = 1)
 display(dilateImage2, "dilate2")
 
+cannyImage1 = auto_canny(dilateImage2)
+display(cannyImage1, "cannyImage1 to try")
+
 # 6. Adaptive Gaussian thresholding
-adaptiveGaussianThresholdImage = cv2.adaptiveThreshold(dilateImage2, 
-	255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-display(adaptiveGaussianThresholdImage, "adaptiveGaussianThresholdImage")
+#adaptiveGaussianThresholdImage = cv2.adaptiveThreshold(dilateImage2, 
+	#255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+#display(adaptiveGaussianThresholdImage, "adaptiveGaussianThresholdImage")
 
 # 7. Open, close
-erodeImage4 = cv2.erode(adaptiveGaussianThresholdImage, kernel2, iterations = 1)
+erodeImage4 = cv2.erode(dilateImage2, kernel2, iterations = 1)
 display(erodeImage4, "erodeImage4")
 kernel3 = np.ones((5, 5), np.uint8)
-dilateImage3 = cv2.dilate(erodeImage4, kernel3, 
-	iterations = 1)
-display(dilateImage3, "dilateImage3")
+#dilateImage3 = cv2.dilate(erodeImage4, kernel3, iterations = 1)
+#display(dilateImage3, "dilateImage3")
 
 # 8. Canny edge detection
-# Following function is from https://goo.gl/E9F4m8 :
-def auto_canny(image, sigma = 0.1):
-	# compute the median of the single channel pixel intensities
-	v = np.median(image)
- 
-	# apply automatic Canny edge detection using the computed median
-	lower = int(max(0, (1.0 - sigma) * v))
-	upper = int(min(255, (1.0 + sigma) * v))
-	edged = cv2.Canny(image, lower, upper)
- 
-	# return the edged image
-	return edged
-
-cannyImage = auto_canny(dilateImage3)
+cannyImage = auto_canny(erodeImage4)
 display(cannyImage, "cannyImage")
 
 # 9. Gaussian blur
@@ -95,14 +98,14 @@ cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 (cnts, _) = contours.sort_contours(cnts)
 large_contours = []
 for cont in cnts:
-	if 5000 > cv2.contourArea(cont) > 2000 and 1000 > cv2.arcLength(cont, True) > 450:
+	if cv2.contourArea(cont) > 800 and cv2.arcLength(cont, True) > 500:
 		print "area: ", cv2.contourArea(cont), " perimeter: ", cv2.arcLength(cont, True)
 		large_contours.append(cont)
 
 large_contours.sort(key=lambda x: (8 - (cv2.contourArea(x) / 
 	cv2.arcLength(x, True))) ** 2, reverse=False)
-cv2.drawContours(imageCopy,[large_contours[0]], 0, (0, 255, 127), 2)
+cv2.drawContours(small,[large_contours[0]], 0, (0, 255, 127), 2)
 
-cv2.imshow("Image", imageCopy)
+cv2.imshow("Image", small)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
