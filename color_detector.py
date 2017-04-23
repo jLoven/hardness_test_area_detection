@@ -37,6 +37,7 @@ args = vars(ap.parse_args())
 image = cv2.imread("images/" + args["image"])
 size = args["size"]
 imageCopy = image.copy()
+display(imageCopy)
 
 #GBR
 #RGB
@@ -47,17 +48,17 @@ RED_MAX = np.array([120, 120, 250], np.uint8)
 dst = cv2.inRange(imageCopy, RED_MIN, RED_MAX)
 no_red = cv2.countNonZero(dst)
 invertImage = cv2.bitwise_not(dst)
-display(invertImage)
+#display(invertImage)
 
 kernel = np.ones((7, 7), np.uint8)
 erodeImage1 = cv2.erode(invertImage, kernel, iterations = 1)
 display(erodeImage1, "erode1")
 dilateImage1 = cv2.dilate(erodeImage1, kernel, iterations = 1)
-display(dilateImage1, "dilate1")
+#display(dilateImage1, "dilate1")
 
 cannyImage = auto_canny(dilateImage1)
 blurredImage1 = cv2.GaussianBlur(cannyImage, (3, 3), 0)
-display(blurredImage1)
+#display(blurredImage1)
 
 
 # Find contours:
@@ -65,8 +66,14 @@ cnts = cv2.findContours(blurredImage1,
 	cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 (cnts, _) = contours.sort_contours(cnts)
+relevantContour = cnts[0]
+#cv2.drawContours(imageCopy, [relevantContour], 0, (0, 255, 127), 2)
 
-cv2.drawContours(imageCopy, [cnts[0]], 0, (0, 255, 127), 2)
+rect = cv2.minAreaRect(relevantContour)
+box = cv2.boxPoints(rect)
+box = np.int0(box)
+cv2.drawContours(imageCopy, [relevantContour, box], 0, [(0, 255, 127),(255, 0, 127)], 2)
+#cv2.drawContours(img,[box],0,(0,0,255),2)
 
 #print('Indent area is ' + cv2.contourArea(cnts[0]))
 display(imageCopy)
