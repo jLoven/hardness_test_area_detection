@@ -52,9 +52,9 @@ invertImage = cv2.bitwise_not(dst)
 
 kernel = np.ones((7, 7), np.uint8)
 erodeImage1 = cv2.erode(invertImage, kernel, iterations = 1)
-display(erodeImage1, "erode1")
+#display(erodeImage1, "erode1")
 dilateImage1 = cv2.dilate(erodeImage1, kernel, iterations = 1)
-#display(dilateImage1, "dilate1")
+display(dilateImage1, "dilate1")
 
 cannyImage = auto_canny(dilateImage1)
 blurredImage1 = cv2.GaussianBlur(cannyImage, (3, 3), 0)
@@ -70,9 +70,9 @@ relevantContour = cnts[0]
 cv2.drawContours(imageCopy, [relevantContour], 0, (0, 255, 127), 2)
 
 rect = cv2.minAreaRect(relevantContour)
-box = cv2.boxPoints(rect)
+box = cv2.cv.BoxPoints(rect)
 box = np.int0(box)
-cv2.drawContours(imageCopy,[box],0,(0,0,255),2)
+cv2.drawContours(imageCopy,[box],0,(255, 0, 0),2)
 
 #print('Indent area is ' + cv2.contourArea(cnts[0]))
 display(imageCopy)
