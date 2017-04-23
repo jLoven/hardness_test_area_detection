@@ -68,7 +68,7 @@ cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 
 cv2.drawContours(imageCopy, [cnts[0]], 0, (0, 255, 127), 2)
 
-print('Indent area is ' + cv2.contourArea(cnts[0)])
+#print('Indent area is ' + cv2.contourArea(cnts[0]))
 display(imageCopy)
 
 
