@@ -67,13 +67,12 @@ cnts = cv2.findContours(blurredImage1,
 cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 (cnts, _) = contours.sort_contours(cnts)
 relevantContour = cnts[0]
-#cv2.drawContours(imageCopy, [relevantContour], 0, (0, 255, 127), 2)
+cv2.drawContours(imageCopy, [relevantContour], 0, (0, 255, 127), 2)
 
 rect = cv2.minAreaRect(relevantContour)
 box = cv2.boxPoints(rect)
 box = np.int0(box)
-cv2.drawContours(imageCopy, [relevantContour, box], 0, [(0, 255, 127),(255, 0, 127)], 2)
-#cv2.drawContours(img,[box],0,(0,0,255),2)
+cv2.drawContours(imageCopy,[box],0,(0,0,255),2)
 
 #print('Indent area is ' + cv2.contourArea(cnts[0]))
 display(imageCopy)
