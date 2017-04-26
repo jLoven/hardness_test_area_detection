@@ -40,11 +40,12 @@ imageCopy1 = image.copy()
 imageCopy2 = image.copy()
 
 #GBR
+#BGR
 #RGB
 RED_MIN = np.array([40, 40, 200], np.uint8)
 RED_MAX = np.array([120, 120, 250], np.uint8)
-GREEN_MIN = np.array([175, 75, 90], np.uint8)
-GREEN_MAX = np.array([195, 130, 140], np.uint8)
+GREEN_MIN = np.array([75, 175, 90], np.uint8)
+GREEN_MAX = np.array([130, 195, 140], np.uint8)
 
 def grab_color(image, minimum, maximum):
 	dst = cv2.inRange(image, minimum, maximum)
@@ -52,7 +53,7 @@ def grab_color(image, minimum, maximum):
 	invertImage = cv2.bitwise_not(dst)
 	return invertImage
 
-invertImage = grab_color(imageCopy1, RED_MIN, RED_MAX)
+invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
 invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
 display(invertImage2, "green")
 
