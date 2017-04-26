@@ -44,7 +44,7 @@ imageCopy2 = image.copy()
 #RGB
 RED_MIN = np.array([40, 40, 200], np.uint8)
 RED_MAX = np.array([120, 120, 250], np.uint8)
-GREEN_MIN = np.array([75, 175, 90], np.uint8)
+GREEN_MIN = np.array([60, 160, 80], np.uint8)
 GREEN_MAX = np.array([130, 195, 140], np.uint8)
 
 def grab_color(image, minimum, maximum):
