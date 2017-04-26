@@ -69,6 +69,7 @@ def erode_dilate_canny_blur(image, kernel):
 
 editImage1 = erode_dilate_canny_blur(invertImage1, kernel)
 editImage2 = erode_dilate_canny_blur(invertImage2, kernel)
+display(editImage1)
 
 def find_contours(image, imageToDrawOn):
 	cnts = cv2.findContours(image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
@@ -79,6 +80,7 @@ def find_contours(image, imageToDrawOn):
 	return relevantContour
 
 relevantContour1 = find_contours(editImage1, imageCopy1)
+display(imageCopy1)
 relevantContour2 = find_contours(editImage2, imageCopy1)
 
 def find_rect(relevantContour, image):
