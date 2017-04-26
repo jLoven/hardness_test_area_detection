@@ -77,14 +77,14 @@ def find_contours(image, imageToDrawOn):
 	(cnts, _) = contours.sort_contours(cnts)
 	relevantContour = cnts[0]
 	cv2.drawContours(imageToDrawOn, [relevantContour], 0, (0, 255, 127), 2)
+	print relevantContour.
 	return relevantContour
 
 relevantContour1 = find_contours(editImage1, imageCopy1)
-display(imageCopy1)
 relevantContour2 = find_contours(editImage2, imageCopy1)
 
-def find_rect(relevantContour, image):
-	rect = cv2.minAreaRect(relevantContour)
+def find_rect(image, cnt):
+	rect = cv2.minAreaRect(cnt)
 	box = cv2.cv.BoxPoints(rect)
 	box = np.int0(box)
 	cv2.drawContours(image,[box],0,(255, 0, 0),2)
