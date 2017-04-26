@@ -77,7 +77,6 @@ def find_contours(image, imageToDrawOn):
 	(cnts, _) = contours.sort_contours(cnts)
 	relevantContour = cnts[0]
 	cv2.drawContours(imageToDrawOn, [relevantContour], 0, (0, 255, 127), 2)
-	print relevantContour.
 	return relevantContour
 
 relevantContour1 = find_contours(editImage1, imageCopy1)
