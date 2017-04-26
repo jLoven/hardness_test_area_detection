@@ -38,7 +38,6 @@ image = cv2.imread("images/" + args["image"])
 size = args["size"]
 imageCopy1 = image.copy()
 imageCopy2 = image.copy()
-display(imageCopy)
 
 #GBR
 #RGB
@@ -55,6 +54,7 @@ def grab_color(image, minimum, maximum):
 
 invertImage = grab_color(imageCopy1, RED_MIN, RED_MAX)
 invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
+display(invertImage2, "green")
 
 kernel = np.ones((7, 7), np.uint8)
 
