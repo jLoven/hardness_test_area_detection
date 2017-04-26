@@ -36,7 +36,8 @@ ap.add_argument("-si", "--size", required=True,
 args = vars(ap.parse_args())
 image = cv2.imread("images/" + args["image"])
 size = args["size"]
-imageCopy = image.copy()
+imageCopy1 = image.copy()
+imageCopy2 = image.copy()
 display(imageCopy)
 
 #GBR
@@ -46,56 +47,49 @@ RED_MAX = np.array([120, 120, 250], np.uint8)
 GREEN_MIN = np.array([175, 75, 90], np.uint8)
 GREEN_MAX = np.array([195, 130, 140], np.uint8)
 
-#display(imageCopy)
-dst = cv2.inRange(imageCopy, RED_MIN, RED_MAX)
-no_red = cv2.countNonZero(dst)
-invertImage = cv2.bitwise_not(dst)
-#display(invertImage)
+def grab_color(image, minimum, maximum):
+	dst = cv2.inRange(image, minimum, maximum)
+	opposite = cv2.countNonZero(dst)
+	invertImage = cv2.bitwise_not(dst)
+	return invertImage
 
-dst2 = cv2.inRange(imageCopy, GREEN_MIN, GREEN_MAX)
-no_green = cv2.countNonZero(dst2)
-invertImage2 = cv2.bitwise_not(dst2)
+invertImage = grab_color(imageCopy1, RED_MIN, RED_MAX)
+invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
 
 kernel = np.ones((7, 7), np.uint8)
-erodeImage1 = cv2.erode(invertImage, kernel, iterations = 1)
-erodeImage2 = cv2.erode(invertImage2, kernel, iterations = 1)
-#display(erodeImage1, "erode1")
-dilateImage1 = cv2.dilate(erodeImage1, kernel, iterations = 1)
-dilateImage2 = cv2.dilate(erodeImage2, kernel, iterations = 1)
-display(dilateImage1, "dilate1")
-display(dilateImage2, "dilate2")
 
-cannyImage = auto_canny(dilateImage1)
-cannyImage2 = auto_canny(dilateImage2)
-blurredImage1 = cv2.GaussianBlur(cannyImage, (3, 3), 0)
-blurredImage2 = cv2.GaussianBlur(cannyImage2, (3, 3), 0)
-#display(blurredImage1)
+def erode_dilate_canny_blur(image, kernel):
+	erodeImage = cv2.erode(image, kernel, iterations = 1)
+	dilateImage = cv2.dilate(erodeImage, kernel, iterations = 1)
+	cannyImage = auto_canny(dilateImage)
+	blurImage = cv2.GaussianBlur(cannyImage, (3, 3), 0)
+	return blurImage
 
 
-# Find contours:
-cnts = cv2.findContours(blurredImage1, 
-	cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
-cnts2 = cv2.findContours(blurredImage2, 
-	cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
-cnts = cnts[0] if imutils.is_cv2() else cnts[1]
-cnts2 = cnts2[0] if imutils.is_cv2() else cnts2[1]
-(cnts, _) = contours.sort_contours(cnts)
-(cnts2, _) = contours.sort_contours(cnts2)
-relevantContour = cnts[0]
-relevantContour2 = cnts2[0]
-cv2.drawContours(imageCopy, [relevantContour], 0, (0, 255, 127), 2)
-cv2.drawContours(imageCopy, [relevantContour2], 0, (0, 255, 127), 2)
+editImage1 = erode_dilate_canny_blur(invertImage1, kernel)
+editImage2 = erode_dilate_canny_blur(invertImage2, kernel)
 
-rect = cv2.minAreaRect(relevantContour)
-rect2 = cv2.minAreaRect(relevantContour2)
-box = cv2.cv.BoxPoints(rect)
-box2 = cv2.cv.BoxPoints(rect2)
-box = np.int0(box)
-box2 = np.int0(box2)
-cv2.drawContours(imageCopy,[box],0,(255, 0, 0),2)
-cv2.drawContours(imageCopy,[box2],0,(255, 255, 0),2)
+def find_contours(image, imageToDrawOn):
+	cnts = cv2.findContours(image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+	(cnts, _) = contours.sort_contours(cnts)
+	relevantContour = cnts[0]
+	cv2.drawContours(imageToDrawOn, [relevantContour], 0, (0, 255, 127), 2)
+	return relevantContour
+
+relevantContour1 = find_contours(editImage1, imageCopy1)
+relevantContour2 = find_contours(editImage2, imageCopy1)
+
+def find_rect(relevantContour, image):
+	rect = cv2.minAreaRect(relevantContour)
+	box = cv2.cv.BoxPoints(rect)
+	box = np.int0(box)
+	cv2.drawContours(image,[box],0,(255, 0, 0),2)
+
+find_rect(imageCopy1, relevantContour1)
+find_rect(imageCopy1, relevantContour2)
 
 #print('Indent area is ' + cv2.contourArea(cnts[0]))
-display(imageCopy)
+display(imageCopy1)
 
 
