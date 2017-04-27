@@ -92,7 +92,7 @@ def find_rect(image, cnt):
 
 find_rect(imageCopy1, relevantContour1)
 x, y, w, h = cv2.boundingRect(relevantContour2)
-pixelsPerMetric = size / w
+pixelsPerMetric = float(size) / float(w)
 contourArea = cv2.contourArea(relevantContour1)
 areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
 
