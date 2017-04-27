@@ -55,7 +55,6 @@ def grab_color(image, minimum, maximum):
 
 invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
 invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
-display(invertImage2, "green")
 
 kernel = np.ones((7, 7), np.uint8)
 
@@ -69,7 +68,6 @@ def erode_dilate_canny_blur(image, kernel):
 
 editImage1 = erode_dilate_canny_blur(invertImage1, kernel)
 editImage2 = erode_dilate_canny_blur(invertImage2, kernel)
-display(editImage1)
 
 def find_contours(image, imageToDrawOn):
 	cnts = cv2.findContours(image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
@@ -89,9 +87,11 @@ def find_rect(image, cnt):
 	cv2.drawContours(image,[box],0,(255, 0, 0),2)
 
 find_rect(imageCopy1, relevantContour1)
-find_rect(imageCopy1, relevantContour2)
+x, y, w, h = cv2.boundingRect(relevantContour2)
+
+
 
 #print('Indent area is ' + cv2.contourArea(cnts[0]))
-display(imageCopy1)
+display(imageCopy1, "width is " + w)
 
 
