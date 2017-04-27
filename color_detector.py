@@ -65,14 +65,13 @@ def erode_dilate_canny_blur(image, kernel):
 	blurImage = cv2.GaussianBlur(cannyImage, (3, 3), 0)
 	return blurImage
 
-def canny_blur(image, kernel):
+def canny_image(image):
 	cannyImage = auto_canny(image)
-	blurImage = cv2.GaussianBlur(cannyImage, (3, 3), 0)
-	return blurImage
+	return cannyImage
 
 
 editImage1 = erode_dilate_canny_blur(invertImage1, kernel)
-editImage2 = canny_blur(invertImage2, kernel)
+editImage2 = canny_image(invertImage2)
 
 def find_contours(image, imageToDrawOn):
 	cnts = cv2.findContours(image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
