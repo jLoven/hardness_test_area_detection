@@ -92,6 +92,6 @@ x, y, w, h = cv2.boundingRect(relevantContour2)
 
 
 #print('Indent area is ' + cv2.contourArea(cnts[0]))
-display(imageCopy1, "width is " + w)
+display(imageCopy1, "width is " + str(w))
 
 
