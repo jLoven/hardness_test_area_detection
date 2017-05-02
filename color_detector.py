@@ -1,5 +1,5 @@
 # Jackie Loven
-# 20 April 2017
+# 2 May 2017
 # Thanks Odell for the advice!
 
 import argparse
@@ -38,6 +38,7 @@ image = cv2.imread("images/" + args["image"])
 size = args["size"]
 imageCopy1 = image.copy()
 imageCopy2 = image.copy()
+display(imageCopy1, "1")
 
 #GBR
 #BGR
@@ -54,7 +55,9 @@ def grab_color(image, minimum, maximum):
 	return invertImage
 
 invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
+display(invertImage1)
 invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
+display(invertImage2)
 
 kernel = np.ones((7, 7), np.uint8)
 
@@ -71,7 +74,9 @@ def canny_image(image):
 
 
 editImage1 = erode_dilate_canny_blur(invertImage1, kernel)
+display(editImage1)
 editImage2 = canny_image(invertImage2)
+display(editImage2)
 
 def find_contours(image, imageToDrawOn):
 	cnts = cv2.findContours(image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
@@ -79,6 +84,7 @@ def find_contours(image, imageToDrawOn):
 	(cnts, _) = contours.sort_contours(cnts)
 	relevantContour = cnts[0]
 	cv2.drawContours(imageToDrawOn, [relevantContour], 0, (0, 255, 127), 2)
+	display(imageToDrawOn)
 	return relevantContour
 
 relevantContour1 = find_contours(editImage1, imageCopy1)
@@ -90,7 +96,7 @@ def find_rect(image, cnt):
 	box = np.int0(box)
 	cv2.drawContours(image,[box],0,(255, 0, 0),2)
 
-find_rect(imageCopy1, relevantContour1)
+#find_rect(imageCopy1, relevantContour1)
 x, y, w, h = cv2.boundingRect(relevantContour2)
 pixelsPerMetric = float(size) / float(w)
 contourArea = cv2.contourArea(relevantContour1)
