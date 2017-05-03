@@ -8,23 +8,22 @@ import numpy as np
 import imutils
 from imutils import contours
 
-def display(img, name="img"):
-    """Displays a window with an image.
-    Press space while focussed on the window to move on."""
-    cv2.imshow(name, img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+def display(img, name="img", size=1.0):
+    	"""Displays a window with an image.
+    	Press space while focussed on the window to move on."""
+	small = cv2.resize(img, (0, 0), fx = size, fy = size)
+	cv2.imshow(name, small)
+    	cv2.waitKey(0)
+    	cv2.destroyAllWindows()
 
 # Following function is from https://goo.gl/E9F4m8 :
 def auto_canny(image, sigma = 0.33):
 	# compute the median of the single channel pixel intensities
 	v = np.median(image)
- 
 	# apply automatic Canny edge detection using the computed median
 	lower = int(max(0, (1.0 - sigma) * v))
 	upper = int(min(255, (1.0 + sigma) * v))
 	edged = cv2.Canny(image, lower, upper)
- 
 	# return the edged image
 	return edged
 
@@ -34,19 +33,19 @@ ap.add_argument("-i", "--image", required=True,
 ap.add_argument("-si", "--size", required=True, 
 	help="size of scale bar in image")
 args = vars(ap.parse_args())
-image = cv2.imread("images/" + args["image"])
+#image = cv2.imread("images/" + args["image"])
+image = cv2.imread(args["image"])
 size = args["size"]
 imageCopy1 = image.copy()
 imageCopy2 = image.copy()
-display(imageCopy1, "1")
 
 #GBR
 #BGR
 #RGB
-RED_MIN = np.array([40, 40, 200], np.uint8)
-RED_MAX = np.array([120, 120, 250], np.uint8)
-GREEN_MIN = np.array([60, 160, 80], np.uint8)
-GREEN_MAX = np.array([130, 195, 140], np.uint8)
+RED_MIN = np.array([0, 0, 209], np.uint8)
+RED_MAX = np.array([136, 117, 253], np.uint8)
+GREEN_MIN = np.array([52, 200, 38], np.uint8)
+GREEN_MAX = np.array([115, 245, 110], np.uint8)
 
 def grab_color(image, minimum, maximum):
 	dst = cv2.inRange(image, minimum, maximum)
@@ -55,9 +54,9 @@ def grab_color(image, minimum, maximum):
 	return invertImage
 
 invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
-display(invertImage1)
+display(invertImage1, "", 0.25)
 invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
-display(invertImage2)
+display(invertImage2, "", 0.25)
 
 kernel = np.ones((7, 7), np.uint8)
 
@@ -73,10 +72,10 @@ def canny_image(image):
 	return cannyImage
 
 
-editImage1 = erode_dilate_canny_blur(invertImage1, kernel)
-display(editImage1)
-editImage2 = canny_image(invertImage2)
-display(editImage2)
+editImage1 = erode_dilate_canny_blur(invertImage2, kernel)
+display(editImage1, "", 0.25)
+editImage2 = canny_image(invertImage1)
+display(editImage2, "", 0.25)
 
 def find_contours(image, imageToDrawOn):
 	cnts = cv2.findContours(image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
@@ -84,7 +83,7 @@ def find_contours(image, imageToDrawOn):
 	(cnts, _) = contours.sort_contours(cnts)
 	relevantContour = cnts[0]
 	cv2.drawContours(imageToDrawOn, [relevantContour], 0, (0, 255, 127), 2)
-	display(imageToDrawOn)
+	display(imageToDrawOn, "", 0.25)
 	return relevantContour
 
 relevantContour1 = find_contours(editImage1, imageCopy1)
@@ -102,6 +101,7 @@ pixelsPerMetric = float(size) / float(w)
 contourArea = cv2.contourArea(relevantContour1)
 areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
 
-display(imageCopy1, "area is " + str(areaInMicrons) + " or " + str(contourArea))
+cv2.imwrite("generated_images/" + "a" + ".png", imageCopy1)
+display(imageCopy1, "area is " + str(areaInMicrons) + " or " + str(contourArea), 0.25)
 
 
