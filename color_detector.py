@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import imutils
 from imutils import contours
+import os
 
 def display(img, name="img", size=1.0):
     	"""Displays a window with an image.
@@ -38,6 +39,18 @@ image = cv2.imread(args["image"])
 size = args["size"]
 imageCopy1 = image.copy()
 imageCopy2 = image.copy()
+
+def grab_image_data(path):
+	imageName = os.path.split(s)[-1]
+	name, ext = imageName.split(".png")
+	listOfNums = name.split("_")
+	if len(listOfStr) == 4:
+		listOfNums[0] = int(listOfNums[0])
+		listOfNums[1] = int(listOfNums[1])
+		listOfNums[2] = float(listOfNums[2])
+		listOfNums[3] = float(listOfNums[3])
+		return listOfNums
+	else: return 
 
 #GBR
 #BGR
