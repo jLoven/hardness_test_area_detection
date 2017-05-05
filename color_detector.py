@@ -33,6 +33,8 @@ ap.add_argument("-i", "--image", required=True,
 	help="path to the input image")
 ap.add_argument("-si", "--size", required=True, 
 	help="size of scale bar in image")
+ap.add_argument("-sa", "--sample", required=True, 
+	help="sample composition")
 args = vars(ap.parse_args())
 #image = cv2.imread("images/" + args["image"])
 image = cv2.imread(args["image"])
@@ -44,15 +46,15 @@ def grab_image_data(path):
 	imageName = os.path.split(s)[-1]
 	name, ext = imageName.split(".png")
 	listOfNums = name.split("_")
+	emptyList = []
 	if len(listOfStr) == 4:
 		listOfNums[0] = int(listOfNums[0])
 		listOfNums[1] = int(listOfNums[1])
 		listOfNums[2] = float(listOfNums[2])
 		listOfNums[3] = float(listOfNums[3])
 		return listOfNums
-	else: return 
+	else: return emptyList
 
-#GBR
 #BGR
 #RGB
 RED_MIN = np.array([0, 0, 209], np.uint8)
@@ -60,18 +62,13 @@ RED_MAX = np.array([136, 117, 253], np.uint8)
 GREEN_MIN = np.array([52, 200, 38], np.uint8)
 GREEN_MAX = np.array([115, 245, 110], np.uint8)
 
+kernel = np.ones((7, 7), np.uint8)
+
 def grab_color(image, minimum, maximum):
 	dst = cv2.inRange(image, minimum, maximum)
 	opposite = cv2.countNonZero(dst)
 	invertImage = cv2.bitwise_not(dst)
 	return invertImage
-
-invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
-display(invertImage1, "", 0.25)
-invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
-display(invertImage2, "", 0.25)
-
-kernel = np.ones((7, 7), np.uint8)
 
 def erode_dilate_canny_blur(image, kernel):
 	erodeImage = cv2.erode(image, kernel, iterations = 1)
@@ -84,12 +81,6 @@ def canny_image(image):
 	cannyImage = auto_canny(image)
 	return cannyImage
 
-
-editImage1 = erode_dilate_canny_blur(invertImage2, kernel)
-display(editImage1, "", 0.25)
-editImage2 = canny_image(invertImage1)
-display(editImage2, "", 0.25)
-
 def find_contours(image, imageToDrawOn):
 	cnts = cv2.findContours(image, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
 	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
@@ -99,22 +90,38 @@ def find_contours(image, imageToDrawOn):
 	display(imageToDrawOn, "", 0.25)
 	return relevantContour
 
-relevantContour1 = find_contours(editImage1, imageCopy1)
-relevantContour2 = find_contours(editImage2, imageCopy1)
-
 def find_rect(image, cnt):
 	rect = cv2.minAreaRect(cnt)
 	box = cv2.cv.BoxPoints(rect)
 	box = np.int0(box)
 	cv2.drawContours(image,[box],0,(255, 0, 0),2)
 
-#find_rect(imageCopy1, relevantContour1)
-x, y, w, h = cv2.boundingRect(relevantContour2)
-pixelsPerMetric = float(size) / float(w)
-contourArea = cv2.contourArea(relevantContour1)
-areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
+imageInfoList = grab_image_data(args["image"])
+if len(imageInfoList) == 4:
+	print("load: " + imageInfoList[0] + " number: " + imageInfoList[1] +
+		" C.S. area: " + imageInfoList[2] + " surface area: " + imageInfoList[3])
+	invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
+	display(invertImage1, "", 0.25)
+	invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
+	display(invertImage2, "", 0.25)
+	editImage1 = erode_dilate_canny_blur(invertImage2, kernel)
+	display(editImage1, "", 0.25)
+	editImage2 = canny_image(invertImage1)
+	display(editImage2, "", 0.25)
+	relevantContour1 = find_contours(editImage1, imageCopy1)
+	relevantContour2 = find_contours(editImage2, imageCopy1)
+	#find_rect(imageCopy1, relevantContour1)
+	x, y, w, h = cv2.boundingRect(relevantContour2)
+	pixelsPerMetric = float(size) / float(w)
+	contourArea = cv2.contourArea(relevantContour1)
+	areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
 
-cv2.imwrite("generated_images/" + "a" + ".png", imageCopy1)
-display(imageCopy1, "area is " + str(areaInMicrons) + " or " + str(contourArea), 0.25)
+	cv2.imwrite("generated_images/" + args["sample"] + "_" + imageInfoList[1] 
+		+ ".png", imageCopy1)
+	print("area: " + areaInMicrons)
+
+
+
+
 
 
