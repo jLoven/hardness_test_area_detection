@@ -43,11 +43,11 @@ imageCopy1 = image.copy()
 imageCopy2 = image.copy()
 
 def grab_image_data(path):
-	imageName = os.path.split(s)[-1]
+	imageName = os.path.split(path)[-1]
 	name, ext = imageName.split(".png")
 	listOfNums = name.split("_")
 	emptyList = []
-	if len(listOfStr) == 4:
+	if len(listOfNums) == 4:
 		listOfNums[0] = int(listOfNums[0])
 		listOfNums[1] = int(listOfNums[1])
 		listOfNums[2] = float(listOfNums[2])
@@ -98,8 +98,8 @@ def find_rect(image, cnt):
 
 imageInfoList = grab_image_data(args["image"])
 if len(imageInfoList) == 4:
-	print("load: " + imageInfoList[0] + " number: " + imageInfoList[1] +
-		" C.S. area: " + imageInfoList[2] + " surface area: " + imageInfoList[3])
+	print("load: " + str(imageInfoList[0]) + " number: " + str(imageInfoList[1]) +
+		" C.S. area: " + str(imageInfoList[2]) + " surface area: " + str(imageInfoList[3]))
 	invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
 	display(invertImage1, "", 0.25)
 	invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
@@ -116,9 +116,9 @@ if len(imageInfoList) == 4:
 	contourArea = cv2.contourArea(relevantContour1)
 	areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
 
-	cv2.imwrite("generated_images/" + args["sample"] + "_" + imageInfoList[1] 
+	cv2.imwrite("generated_images/" + args["sample"] + "_" + str(imageInfoList[1]) 
 		+ ".png", imageCopy1)
-	print("area: " + areaInMicrons)
+	print("area: " + str(areaInMicrons))
 
 
 
