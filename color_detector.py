@@ -29,18 +29,14 @@ def auto_canny(image, sigma = 0.33):
 	return edged
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True, 
+ap.add_argument("-di", "--directory", required=True, 
 	help="path to the input image")
 ap.add_argument("-si", "--size", required=True, 
 	help="size of scale bar in image")
 ap.add_argument("-sa", "--sample", required=True, 
 	help="sample composition")
 args = vars(ap.parse_args())
-#image = cv2.imread("images/" + args["image"])
-image = cv2.imread(args["image"])
 size = args["size"]
-imageCopy1 = image.copy()
-imageCopy2 = image.copy()
 
 def grab_image_data(path):
 	imageName = os.path.split(path)[-1]
@@ -96,32 +92,38 @@ def find_rect(image, cnt):
 	box = np.int0(box)
 	cv2.drawContours(image,[box],0,(255, 0, 0),2)
 
-imageInfoList = grab_image_data(args["image"])
-if len(imageInfoList) == 4:
-	print("load: " + str(imageInfoList[0]) + " number: " + str(imageInfoList[1]) +
-		" C.S. area: " + str(imageInfoList[2]) + " surface area: " + str(imageInfoList[3]))
+def manipulate_image(filename, imageInfoList):
+	
+	image = cv2.imread(filename)
+	imageCopy1 = image.copy()
+	imageCopy2 = image.copy()
+	display(image, "img", 0.25)
 	invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
-	display(invertImage1, "", 0.25)
 	invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
-	display(invertImage2, "", 0.25)
 	editImage1 = erode_dilate_canny_blur(invertImage2, kernel)
-	display(editImage1, "", 0.25)
 	editImage2 = canny_image(invertImage1)
-	display(editImage2, "", 0.25)
 	relevantContour1 = find_contours(editImage1, imageCopy1)
 	relevantContour2 = find_contours(editImage2, imageCopy1)
-	#find_rect(imageCopy1, relevantContour1)
 	x, y, w, h = cv2.boundingRect(relevantContour2)
 	pixelsPerMetric = float(size) / float(w)
 	contourArea = cv2.contourArea(relevantContour1)
 	areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
+	# save image somewhere
+	cv2.imwrite("generated_images/" + args["sample"] + "_" + str(imageInfoList[0]) + "_" 
+		+ str(imageInfoList[1]) + ".png", imageCopy1)
+	# return area
+	return areaInMicrons
 
-	cv2.imwrite("generated_images/" + args["sample"] + "_" + str(imageInfoList[1]) 
-		+ ".png", imageCopy1)
-	print("area: " + str(areaInMicrons))
+def images_in_directory(directory):
+	for filename in os.listdir(directory):
+		imageInfoList = grab_image_data(filename)
+	    if len(imageInfoList) == 4:
+	    	print("load: " + str(imageInfoList[0]) + " number: " + str(imageInfoList[1]) 
+	    		+ " C.S. area: " + str(imageInfoList[2]) + " surface area: " 
+	    		+ str(imageInfoList[3]))
+			areaInMicrons = manipulate_image(filename, imageInfoList)
+	        print("area: " + str(areaInMicrons))
 
 
-
-
-
+images_in_directory(args["directory"])
 
