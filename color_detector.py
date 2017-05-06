@@ -107,15 +107,17 @@ def manipulate_image(filename, imageInfoList):
 	return areaInMicrons
 
 def images_in_directory(directory):
+	currentFile = open("generated_files/" + args["sample"] + ".txt", "w")
+	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\n"
+	currentFile.write(line)
 	for filename in os.listdir(directory):
 		print(filename + " filename")
 		imageInfoList = grab_image_data(filename)
 	    	if len(imageInfoList) == 4:
-	    		print("load: " + str(imageInfoList[0]) + " number: " + str(imageInfoList[1]) 
-	    			+ " C.S. area: " + str(imageInfoList[2]) + " surface area: " 
-	    			+ str(imageInfoList[3]))
 			areaInMicrons = manipulate_image(filename, imageInfoList)
-	        	print("area: " + str(areaInMicrons))
+			dataLine = str(imageInfoList[0]) + "\t" + str(imageInfoList[1]) + "\t" + str(areaInMicrons) + "\t" + str(imageInfoList[2]) + "\t" + str(imageInfoList[3])
+			currentFile.write(dataLine + "\n")
+	currentFile.close()
 
 
 images_in_directory(args["directory"])
