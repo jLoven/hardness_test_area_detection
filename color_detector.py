@@ -101,7 +101,7 @@ def manipulate_image(filename, imageInfoList):
 	contourArea = cv2.contourArea(relevantContour1)
 	areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
 	# save image somewhere
-	cv2.imwrite("generated_images/" + args["sample"] + "_" + str(imageInfoList[0]) + "_" 
+	cv2.imwrite("generated_images/" + args["sample"] + "/" + str(imageInfoList[0]) + "_" 
 		+ str(imageInfoList[1]) + ".png", imageCopy1)
 	# return area
 	return areaInMicrons
