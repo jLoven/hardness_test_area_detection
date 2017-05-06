@@ -83,21 +83,13 @@ def find_contours(image, imageToDrawOn):
 	(cnts, _) = contours.sort_contours(cnts)
 	relevantContour = cnts[0]
 	cv2.drawContours(imageToDrawOn, [relevantContour], 0, (0, 255, 127), 2)
-	display(imageToDrawOn, "", 0.25)
 	return relevantContour
-
-def find_rect(image, cnt):
-	rect = cv2.minAreaRect(cnt)
-	box = cv2.cv.BoxPoints(rect)
-	box = np.int0(box)
-	cv2.drawContours(image,[box],0,(255, 0, 0),2)
 
 def manipulate_image(filename, imageInfoList):
 	
-	image = cv2.imread(filename)
+	image = cv2.imread("final_images_test/" + filename)
 	imageCopy1 = image.copy()
 	imageCopy2 = image.copy()
-	display(image, "img", 0.25)
 	invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
 	invertImage2 = grab_color(imageCopy2, GREEN_MIN, GREEN_MAX)
 	editImage1 = erode_dilate_canny_blur(invertImage2, kernel)
@@ -116,13 +108,14 @@ def manipulate_image(filename, imageInfoList):
 
 def images_in_directory(directory):
 	for filename in os.listdir(directory):
+		print(filename + " filename")
 		imageInfoList = grab_image_data(filename)
-	    if len(imageInfoList) == 4:
-	    	print("load: " + str(imageInfoList[0]) + " number: " + str(imageInfoList[1]) 
-	    		+ " C.S. area: " + str(imageInfoList[2]) + " surface area: " 
-	    		+ str(imageInfoList[3]))
+	    	if len(imageInfoList) == 4:
+	    		print("load: " + str(imageInfoList[0]) + " number: " + str(imageInfoList[1]) 
+	    			+ " C.S. area: " + str(imageInfoList[2]) + " surface area: " 
+	    			+ str(imageInfoList[3]))
 			areaInMicrons = manipulate_image(filename, imageInfoList)
-	        print("area: " + str(areaInMicrons))
+	        	print("area: " + str(areaInMicrons))
 
 
 images_in_directory(args["directory"])
