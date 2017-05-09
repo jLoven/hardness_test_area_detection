@@ -8,6 +8,7 @@ import numpy as np
 import imutils
 from imutils import contours
 import os
+import shutil
 
 def display(img, name="img", size=1.0):
     	"""Displays a window with an image.
@@ -87,7 +88,8 @@ def find_contours(image, imageToDrawOn):
 
 def manipulate_image(filename, imageInfoList):
 	
-	image = cv2.imread("final_images_test/" + filename)
+	
+	image = cv2.imread(args["directory"] + filename)
 	imageCopy1 = image.copy()
 	imageCopy2 = image.copy()
 	invertImage1 = grab_color(imageCopy1, RED_MIN, RED_MAX)
@@ -103,10 +105,21 @@ def manipulate_image(filename, imageInfoList):
 	# save image somewhere
 	cv2.imwrite("generated_images/" + args["sample"] + "/" + str(imageInfoList[0]) + "_" 
 		+ str(imageInfoList[1]) + ".png", imageCopy1)
+	if (abs(areaInMicrons - imageInfoList[2]) / imageInfoList[2]) > 0.1:
+		cv2.imwrite("generated_images/debug/" + args["sample"] + "_" + str(imageInfoList[0]) + "_" + str(imageInfoList[1]) + ".png", imageCopy1)
 	# return area
 	return areaInMicrons
 
 def images_in_directory(directory):
+	directoryName = os.path.expanduser("~/opencv-2.4.9/samples/python2/hardness_test/generated_images/") + args["sample"]
+	directoryName2 = os.path.expanduser("~/opencv-2.4.9/samples/python2/hardness_test/generated_images/") + "debug"
+	if os.path.exists(directoryName):
+		shutil.rmtree(directoryName)
+	if os.path.exists(directoryName2):
+		shutil.rmtree(directoryName2)
+	os.makedirs(directoryName)
+	os.makedirs(directoryName2)
+
 	currentFile = open("generated_files/" + args["sample"] + ".txt", "w")
 	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\n"
 	currentFile.write(line)
