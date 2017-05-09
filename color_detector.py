@@ -55,7 +55,7 @@ def grab_image_data(path):
 #BGR
 #RGB
 RED_MIN = np.array([0, 0, 209], np.uint8)
-RED_MAX = np.array([136, 117, 253], np.uint8)
+RED_MAX = np.array([136, 117, 255], np.uint8)
 GREEN_MIN = np.array([52, 200, 38], np.uint8)
 GREEN_MAX = np.array([115, 245, 110], np.uint8)
 
