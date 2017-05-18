@@ -41,8 +41,12 @@ def manipulate_image(filename, imageInfoList):
 	editImage2 = canny_image(invertImage1)
 	relevantContour1 = find_contours(editImage1, imageCopy1)
 	relevantContour2 = find_contours(editImage2, imageCopy1)
-	# GET SOME SORT OF BOUDNING QUADRILATERAL ON RELCONTOUR1
-
+	# GET SOME SORT OF BOUNDING QUADRILATERAL ON RELCONTOUR1
+	# check out template matching at some point: http://docs.opencv.org/24
+	# /doc/tutorials/imgproc/histograms/template_matching/template_matching.html
+	epsilon = 0.1 * cv2.arcLength(relevantContour1, True)
+    approx = cv2.approxPolyDP(relevantContour1, epsilon, True)
+    cv2.drawContours(imageCopy1, [approx], 0, (150, 255, 127), 2)
 	x, y, w, h = cv2.boundingRect(relevantContour2)
 	pixelsPerMetric = float(size) / float(w)
 	contourArea = cv2.contourArea(relevantContour1)
