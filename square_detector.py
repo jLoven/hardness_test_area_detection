@@ -78,7 +78,6 @@ def images_in_directory(directory):
 			areaInMicrons = manipulate_image(filename, imageInfoList)
 			dataLine = str(imageInfoList[0]) + "\t" + str(imageInfoList[1]) + "\t" + str(areaInMicrons) + "\t" + str(imageInfoList[2]) + "\t" + str(imageInfoList[3])
 			currentFile.write(dataLine + "\n")
-			break
 	currentFile.close()
 
 
