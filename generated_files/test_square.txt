@@ -1,0 +1,4 @@
+Load	Indent Number	My Area	Keyence Area	Keyence Surface Area
+490	1	49.3698506111	49.555	50.825
+490	5	52.239022182	51.985	53.313
+490	4	52.1358080579	52.202	53.583

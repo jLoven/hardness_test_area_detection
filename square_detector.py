@@ -9,7 +9,7 @@ import imutils
 from imutils import contours
 import os
 import shutil
-from color_detector import display, auto_canny, grab_image_data, grab_color, erode_dilate_canny_blur, canny_image, find_contours
+from color_detector_methods import display, auto_canny, grab_image_data, grab_color, erode_dilate_canny_blur, canny_image, find_contours
 
 
 ap = argparse.ArgumentParser()
@@ -44,10 +44,43 @@ def manipulate_image(filename, imageInfoList):
 	# GET SOME SORT OF BOUNDING QUADRILATERAL ON RELCONTOUR1
 	# check out template matching at some point: http://docs.opencv.org/24
 	# /doc/tutorials/imgproc/histograms/template_matching/template_matching.html
-	epsilon = 0.05 * cv2.arcLength(relevantContour1, True)
-	approx = cv2.approxPolyDP(relevantContour1, epsilon, True)
-	cv2.drawContours(imageCopy1, [approx], 0, (0, 0, 255), 2)
+	#epsilon = 0.1 * cv2.arcLength(relevantContour1, True)
+	#approx = cv2.approxPolyDP(relevantContour1, epsilon, True)
+	#cv2.drawContours(imageCopy1, [approx], 0, (0, 0, 255), 2)
 
+	# Grab all pixels inside contour. find extrema. draw a four sided shape.
+	# For every pixel in the bounding box: 
+	x, y, w, h = cv2.boundingRect(relevantContour1)
+	centerPoint = (x + w / 2, y + h / 2)
+	w1, w2 = centerPoint
+	e1, e2 = centerPoint
+	n1, n2 = centerPoint
+	s1, s2 = centerPoint
+	for i in range(x - 10, x + w + 10):
+		for j in range (y - 10, y + h + 10):
+			distanceSign = cv2.pointPolygonTest(relevantContour1, (i, j), False)
+			if distanceSign > -1:
+				if i > e1:
+					e1 = i
+					e2 = j
+				if i < w1:
+					w1 = i
+					w2 = j
+				if j > n2:
+					n1 = i
+					n2 = j
+				if j < s2:
+					s1 = i
+					s2 = j
+	north = (n1, n2 + 1)
+	south = (s1, s2 - 1)
+	east = (e1 + 1, e2)
+	west = (w1 - 1, w2)
+	# draw this shape in red:
+	cv2.line(imageCopy1, north, east, (0, 0, 255), 2)
+	cv2.line(imageCopy1, south, east, (0, 0, 255), 2)
+	cv2.line(imageCopy1, south, west, (0, 0, 255), 2)
+	cv2.line(imageCopy1, north, west, (0, 0, 255), 2)
 	x, y, w, h = cv2.boundingRect(relevantContour2)
 	pixelsPerMetric = float(size) / float(w)
 	contourArea = cv2.contourArea(relevantContour1)
@@ -79,9 +112,6 @@ def images_in_directory(directory):
 			dataLine = str(imageInfoList[0]) + "\t" + str(imageInfoList[1]) + "\t" + str(areaInMicrons) + "\t" + str(imageInfoList[2]) + "\t" + str(imageInfoList[3])
 			currentFile.write(dataLine + "\n")
 	currentFile.close()
-
-
-
 
 
 images_in_directory(args["directory"])
