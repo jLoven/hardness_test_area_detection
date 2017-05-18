@@ -43,16 +43,12 @@ def manipulate_image(filename, imageInfoList):
 	relevantContour2 = find_contours(editImage2, imageCopy1)
 	# GET SOME SORT OF BOUDNING QUADRILATERAL ON RELCONTOUR1
 
-
 	x, y, w, h = cv2.boundingRect(relevantContour2)
 	pixelsPerMetric = float(size) / float(w)
 	contourArea = cv2.contourArea(relevantContour1)
 	areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
 	# save image somewhere
-	generatedImageDirectoryName = os.path.expanduser("~/opencv-2.4.9/samples/python2/hardness_test/generated_images/") + args["sample"] + "_square"
-	if os.path.exists(generatedImageDirectoryName):
-		shutil.rmtree(generatedImageDirectoryName)
-	os.makedirs(generatedImageDirectoryName)
+
 	cv2.imwrite("generated_images/" + args["sample"] + "_square" + "/" + str(imageInfoList[0]) + "_" 
 		+ str(imageInfoList[1]) + "_square.png", imageCopy1)
 	return areaInMicrons
@@ -62,6 +58,10 @@ def images_in_directory(directory):
 	if os.path.exists(directoryName):
 		shutil.rmtree(directoryName)
 	os.makedirs(directoryName)
+	generatedImageDirectoryName = os.path.expanduser("~/opencv-2.4.9/samples/python2/hardness_test/generated_images/") + args["sample"] + "_square"
+	if os.path.exists(generatedImageDirectoryName):
+		shutil.rmtree(generatedImageDirectoryName)
+	os.makedirs(generatedImageDirectoryName)
 
 	currentFile = open("generated_files/" + args["sample"] + "_square.txt", "w")
 	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\n"
