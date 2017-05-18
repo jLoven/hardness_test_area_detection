@@ -44,7 +44,7 @@ def manipulate_image(filename, imageInfoList):
 	# GET SOME SORT OF BOUNDING QUADRILATERAL ON RELCONTOUR1
 	# check out template matching at some point: http://docs.opencv.org/24
 	# /doc/tutorials/imgproc/histograms/template_matching/template_matching.html
-	epsilon = 0.1 * cv2.arcLength(relevantContour1, True)
+	epsilon = 0.05 * cv2.arcLength(relevantContour1, True)
 	approx = cv2.approxPolyDP(relevantContour1, epsilon, True)
 	cv2.drawContours(imageCopy1, [approx], 0, (0, 0, 255), 2)
 
@@ -72,7 +72,7 @@ def images_in_directory(directory):
 	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\n"
 	currentFile.write(line)
 	for filename in os.listdir(directory):
-		print(filename + " filename")
+		print(filename + " filename A")
 		imageInfoList = grab_image_data(filename)
 	    	if len(imageInfoList) == 4:
 			areaInMicrons = manipulate_image(filename, imageInfoList)

@@ -122,7 +122,7 @@ def images_in_directory(directory):
 	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\n"
 	currentFile.write(line)
 	for filename in os.listdir(directory):
-		print(filename + " filename")
+		print(filename + " filename + B")
 		imageInfoList = grab_image_data(filename)
 	    	if len(imageInfoList) == 4:
 			areaInMicrons = manipulate_image(filename, imageInfoList)
@@ -131,5 +131,5 @@ def images_in_directory(directory):
 	currentFile.close()
 
 
-images_in_directory(args["directory"])
+#images_in_directory(args["directory"])
 
