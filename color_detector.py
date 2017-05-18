@@ -1,5 +1,5 @@
 # Jackie Loven
-# 2 May 2017
+# 17 May 2017
 # Thanks Odell for the advice!
 
 import argparse
@@ -87,8 +87,6 @@ def find_contours(image, imageToDrawOn):
 	return relevantContour
 
 def manipulate_image(filename, imageInfoList):
-	
-	
 	image = cv2.imread(args["directory"] + filename)
 	imageCopy1 = image.copy()
 	imageCopy2 = image.copy()
