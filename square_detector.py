@@ -47,6 +47,7 @@ def manipulate_image(filename, imageInfoList):
 	epsilon = 0.1 * cv2.arcLength(relevantContour1, True)
     approx = cv2.approxPolyDP(relevantContour1, epsilon, True)
     cv2.drawContours(imageCopy1, [approx], 0, (150, 255, 127), 2)
+    
 	x, y, w, h = cv2.boundingRect(relevantContour2)
 	pixelsPerMetric = float(size) / float(w)
 	contourArea = cv2.contourArea(relevantContour1)
