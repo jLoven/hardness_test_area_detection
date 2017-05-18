@@ -71,13 +71,14 @@ def images_in_directory(directory):
 	currentFile = open("generated_files/" + args["sample"] + "_square.txt", "w")
 	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\n"
 	currentFile.write(line)
-	#for filename in os.listdir(directory):
-	print(filename + " filename")
-	imageInfoList = grab_image_data(filename)
-	if len(imageInfoList) == 4:
-		areaInMicrons = manipulate_image(filename, imageInfoList)
-		dataLine = str(imageInfoList[0]) + "\t" + str(imageInfoList[1]) + "\t" + str(areaInMicrons) + "\t" + str(imageInfoList[2]) + "\t" + str(imageInfoList[3])
-		currentFile.write(dataLine + "\n")
+	for filename in os.listdir(directory):
+		print(filename + " filename")
+		imageInfoList = grab_image_data(filename)
+	    	if len(imageInfoList) == 4:
+			areaInMicrons = manipulate_image(filename, imageInfoList)
+			dataLine = str(imageInfoList[0]) + "\t" + str(imageInfoList[1]) + "\t" + str(areaInMicrons) + "\t" + str(imageInfoList[2]) + "\t" + str(imageInfoList[3])
+			currentFile.write(dataLine + "\n")
+			break
 	currentFile.close()
 
 
