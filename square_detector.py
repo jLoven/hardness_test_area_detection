@@ -31,6 +31,12 @@ GREEN_MAX = np.array([115, 245, 110], np.uint8)
 
 kernel = np.ones((7, 7), np.uint8)
 
+def distance_formula(point1, point2):
+	x1, x2 = point1
+	y1, y2 = point2
+	distance = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+	return distance
+
 def manipulate_image(filename, imageInfoList):
 	image = cv2.imread(args["directory"] + filename)
 	imageCopy1 = image.copy()
@@ -41,7 +47,6 @@ def manipulate_image(filename, imageInfoList):
 	editImage2 = canny_image(invertImage1)
 	relevantContour1 = find_contours(editImage1, imageCopy1)
 	relevantContour2 = find_contours(editImage2, imageCopy1)
-	# GET SOME SORT OF BOUNDING QUADRILATERAL ON RELCONTOUR1
 	# check out template matching at some point: http://docs.opencv.org/24
 	# /doc/tutorials/imgproc/histograms/template_matching/template_matching.html
 	#epsilon = 0.1 * cv2.arcLength(relevantContour1, True)
@@ -72,10 +77,14 @@ def manipulate_image(filename, imageInfoList):
 				if j < s2:
 					s1 = i
 					s2 = j
-	north = (n1, n2 + 1)
-	south = (s1, s2 - 1)
-	east = (e1 + 1, e2)
-	west = (w1 - 1, w2)
+	n2 = n2 + 0
+	s2 = s2 - 0
+	e1 = e1 + 0
+	w1 = w1 - 0
+	north = (n1, n2)
+	south = (s1, s2)
+	east = (e1, e2)
+	west = (w1, w2)
 	# draw this shape in red:
 	cv2.line(imageCopy1, north, east, (0, 0, 255), 2)
 	cv2.line(imageCopy1, south, east, (0, 0, 255), 2)
@@ -85,11 +94,15 @@ def manipulate_image(filename, imageInfoList):
 	pixelsPerMetric = float(size) / float(w)
 	contourArea = cv2.contourArea(relevantContour1)
 	areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
+	# get box area
+	avgDiagonal = (distance_formula(north, south) + distance_formula(east, west)) / 2
+	areaOfBox = avgDiagonal ** 2 * 0.5
+	boxArea = areaOfBox * (pixelsPerMetric ** 2)
+	print boxArea
 	# save image somewhere
-
 	cv2.imwrite("generated_images/" + args["sample"] + "_square" + "/" + str(imageInfoList[0]) + "_" 
 		+ str(imageInfoList[1]) + "_square.png", imageCopy1)
-	return areaInMicrons
+	return [areaInMicrons, boxArea]
 
 def images_in_directory(directory):
 	directoryName = os.path.expanduser("~/opencv-2.4.9/samples/python2/hardness_test/generated_images/") + args["sample"] + "_square"
@@ -102,14 +115,14 @@ def images_in_directory(directory):
 	os.makedirs(generatedImageDirectoryName)
 
 	currentFile = open("generated_files/" + args["sample"] + "_square.txt", "w")
-	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\n"
+	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\t" + "My Box Area" + "\n"
 	currentFile.write(line)
 	for filename in os.listdir(directory):
 		print(filename + " filename A")
 		imageInfoList = grab_image_data(filename)
 	    	if len(imageInfoList) == 4:
-			areaInMicrons = manipulate_image(filename, imageInfoList)
-			dataLine = str(imageInfoList[0]) + "\t" + str(imageInfoList[1]) + "\t" + str(areaInMicrons) + "\t" + str(imageInfoList[2]) + "\t" + str(imageInfoList[3])
+			[areaInMicrons, boxArea] = manipulate_image(filename, imageInfoList)
+			dataLine = str(imageInfoList[0]) + "\t" + str(imageInfoList[1]) + "\t" + str(areaInMicrons) + "\t" + str(imageInfoList[2]) + "\t" + str(imageInfoList[3]) + "\t" + str(boxArea)
 			currentFile.write(dataLine + "\n")
 	currentFile.close()
 
