@@ -35,6 +35,7 @@ def distance_formula(point1, point2):
 	x1, x2 = point1
 	y1, y2 = point2
 	distance = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+	print distance
 	return distance
 
 def manipulate_image(filename, imageInfoList):
@@ -96,9 +97,9 @@ def manipulate_image(filename, imageInfoList):
 	areaInMicrons = contourArea * pixelsPerMetric * pixelsPerMetric
 	# get box area
 	avgDiagonal = (distance_formula(north, south) + distance_formula(east, west)) / 2
-	areaOfBox = avgDiagonal ** 2 * 0.5
+	areaOfBox = (avgDiagonal ** 2) * 0.5
 	boxArea = areaOfBox * (pixelsPerMetric ** 2)
-	print boxArea
+	print str(boxArea) + " box area"
 	# save image somewhere
 	cv2.imwrite("generated_images/" + args["sample"] + "_square" + "/" + str(imageInfoList[0]) + "_" 
 		+ str(imageInfoList[1]) + "_square.png", imageCopy1)
