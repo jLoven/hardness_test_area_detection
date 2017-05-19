@@ -32,10 +32,9 @@ GREEN_MAX = np.array([115, 245, 110], np.uint8)
 kernel = np.ones((7, 7), np.uint8)
 
 def distance_formula(point1, point2):
-	x1, x2 = point1
-	y1, y2 = point2
+	x1, y1 = point1
+	x2, y2 = point2
 	distance = ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
-	print distance
 	return distance
 
 def manipulate_image(filename, imageInfoList):
@@ -99,7 +98,6 @@ def manipulate_image(filename, imageInfoList):
 	avgDiagonal = (distance_formula(north, south) + distance_formula(east, west)) / 2
 	areaOfBox = (avgDiagonal ** 2) * 0.5
 	boxArea = areaOfBox * (pixelsPerMetric ** 2)
-	print str(boxArea) + " box area"
 	# save image somewhere
 	cv2.imwrite("generated_images/" + args["sample"] + "_square" + "/" + str(imageInfoList[0]) + "_" 
 		+ str(imageInfoList[1]) + "_square.png", imageCopy1)
@@ -119,7 +117,7 @@ def images_in_directory(directory):
 	line = "Load" + "\t" + "Indent Number" + "\t" + "My Area" + "\t" + "Keyence Area" + "\t" + "Keyence Surface Area" + "\t" + "My Box Area" + "\n"
 	currentFile.write(line)
 	for filename in os.listdir(directory):
-		print(filename + " filename A")
+		print(filename + " filename")
 		imageInfoList = grab_image_data(filename)
 	    	if len(imageInfoList) == 4:
 			[areaInMicrons, boxArea] = manipulate_image(filename, imageInfoList)
