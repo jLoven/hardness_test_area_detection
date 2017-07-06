@@ -36,8 +36,8 @@ image = cv2.imread("images/" + args["image"])
 imageCopy = image.copy()
 
 # 1. Convert to grayscale
-small = cv2.resize(imageCopy, (0, 0), fx = 0.5, fy = 0.5)
-grayImage = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
+#small = cv2.resize(imageCopy, (0, 0), fx = 0.5, fy = 0.5)
+grayImage = cv2.cvtColor(imageCopy, cv2.COLOR_BGR2GRAY)
 #invertImage = cv2.bitwise_not(grayImage)
 display(grayImage, "grayscale")
 
@@ -107,8 +107,8 @@ for cont in cnts:
 
 large_contours.sort(key=lambda x: (8 - (cv2.contourArea(x) / 
 	cv2.arcLength(x, True))) ** 2, reverse=False)
-cv2.drawContours(small, [large_contours[0]], 0, (0, 255, 127), 2)
+cv2.drawContours(imageCopy, [large_contours[0]], 0, (0, 255, 127), 2)
 
-cv2.imshow("Image", small)
+cv2.imshow("Image", imageCopy)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
