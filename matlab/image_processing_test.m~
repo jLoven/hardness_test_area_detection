@@ -1,0 +1,2 @@
+I = imread('/Users/platypus/Desktop/mse_4920/hardness_test_area_detection/images/1.png');
+imshow(I);
