@@ -34,7 +34,7 @@ erodeImage2 = imerode(dilateImage1, kernel);
 dilateImage2 = imdilate(erodeImage2, kernel);
 erodeImage3 = imerode(dilateImage2, kernel);
 dilateImage3 = imdilate(erodeImage3, kernel);
-%imshow(dilateImage3);
+imshow(dilateImage3);
 
 % 6. Binarize image
 binaryImage = imbinarize(dilateImage3,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
@@ -42,28 +42,12 @@ binaryImage = imbinarize(dilateImage3,'adaptive','ForegroundPolarity','dark','Se
 
 % 7. Canny edge detect
 cannyImage = edge(binaryImage, 'canny');
-%imshow(cannyImage);
-cannyImageCast = +cannyImage;
+imshow(cannyImage);
 
 % 8. Gaussian blur
-gaussianBlurImage2 = imgaussfilt(cannyImageCast, sigma);
-imshow(imcomplement(gaussianBlurImage2));
+gaussianBlurImage2 = imgaussfilt(cannyImage, sigma);
+imshow(gaussianBlurImage2);
 
-% 9. Contour search
-title('Please click on the edge of the indent', 'FontSize', 20);
-set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-[x,y] = ginput(1);
-% Put a cross where they clicked.
-hold on;
-plot(x, y, 'w+', 'MarkerSize', 50);
-% Get the location they click on.
-row = int32(y);
-column = int32(x);
-disp(row)
-disp(column)
-close all;
-
-% Now, given a location on the contour
 
 
 
