@@ -57,14 +57,15 @@ set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 hold on;
 plot(x, y, 'w+', 'MarkerSize', 50);
 % Get the location they click on.
-row = int32(y);
-column = int32(x);
+row = double(uint8(y));
+column = double(uint8(x));
 disp(row)
 disp(column)
 close all;
 
 % Now, given a location on the contour
-
-
+contour = bwtraceboundary(gaussianBlurImage2, [row column], 'W', 8, Inf, 'counterclockwise');
+hold on;
+plot(contour(:,2),contour(:,1),'g','LineWidth',2);
 
 
