@@ -1,0 +1,10 @@
+imshow(imread('http://i.stack.imgur.com/a5Yi7.jpg'));
+im = imclearborder(im2bw(imread('http://i.stack.imgur.com/a5Yi7.jpg')));
+imshow(im);
+im_fill = imfill(im, 'holes');
+s = regionprops(im_fill, 'Area', 'PixelList');
+[~,ind] = max([s.Area]);
+pix = sub2ind(size(im), s(ind).PixelList(:,2), s(ind).PixelList(:,1));
+out = zeros(size(im));
+out(pix) = im(pix);
+imshow(out);

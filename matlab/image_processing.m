@@ -1,14 +1,14 @@
 % Jackie Loven
 % 14 July 2017
 
-
-
 original = imread('/Users/platypus/Desktop/mse_4920/hardness_test_area_detection/images/1.png');
 originalCopy = original;
-imshow(originalCopy);
+%  TODO: REMOVE CROPPING STEP ONCE REASONABLE IMAGES OBTAINED
+originalCropped = imcrop(originalCopy);
+%imshow(originalCropped);
 
 % 1. Convert to grayscale
-grayscaleImage = rgb2gray(originalCopy);
+grayscaleImage = rgb2gray(originalCropped);
 
 % 2. Gaussian blur
 % OpenCV uses standard dev of 0.3*((ksize-1)*0.5 - 1) + 0.8
@@ -47,25 +47,23 @@ cannyImageCast = +cannyImage;
 
 % 8. Gaussian blur
 gaussianBlurImage2 = imgaussfilt(cannyImageCast, sigma);
-imshow(imcomplement(gaussianBlurImage2));
+complementImage = imcomplement(gaussianBlurImage2);
+%imshow(gaussianBlurImage2);
 
-% 9. Contour search
-title('Please click on the edge of the indent', 'FontSize', 20);
-set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-[x,y] = ginput(1);
-% Put a cross where they clicked.
-hold on;
-plot(x, y, 'w+', 'MarkerSize', 50);
-% Get the location they click on.
-row = double(uint8(y));
-column = double(uint8(x));
-disp(row)
-disp(column)
-close all;
+% 9. Binarize image again
+binaryImage2 = imbinarize(gaussianBlurImage2,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
 
-% Now, given a location on the contour
-contour = bwtraceboundary(gaussianBlurImage2, [row column], 'W', 8, Inf, 'counterclockwise');
-hold on;
-plot(contour(:,2),contour(:,1),'g','LineWidth',2);
+% 10. https://stackoverflow.com/questions/28614074/how-to-select-the-largest-contour-in-matlab
+% Select the largest contour in the selected area.
+im = binaryImage2;
+im_fill = imfill(im, 'holes');
+s = regionprops(im_fill, 'Area', 'PixelList');
+[~,ind] = max([s.Area]);
+pix = sub2ind(size(im), s(ind).PixelList(:,2), s(ind).PixelList(:,1));
+out = zeros(size(im));
+out(pix) = im(pix);
+imshow(out);
 
+% Return the pixel area of this image.
+disp(ind)
 

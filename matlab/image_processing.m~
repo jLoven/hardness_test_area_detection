@@ -1,11 +1,10 @@
 % Jackie Loven
 % 14 July 2017
 
-
-
 original = imread('/Users/platypus/Desktop/mse_4920/hardness_test_area_detection/images/1.png');
 originalCopy = original;
-imshow(originalCopy);
+%originalCropped = imcrop(originalCopy);
+%imshow(originalCropped);
 
 % 1. Convert to grayscale
 grayscaleImage = rgb2gray(originalCopy);
@@ -47,25 +46,44 @@ cannyImageCast = +cannyImage;
 
 % 8. Gaussian blur
 gaussianBlurImage2 = imgaussfilt(cannyImageCast, sigma);
-imshow(imcomplement(gaussianBlurImage2));
+complementImage = imcomplement(gaussianBlurImage2);
+%imshow(complementImage);
 
-% 9. Contour search
-title('Please click on the edge of the indent', 'FontSize', 20);
-set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-[x,y] = ginput(1);
-% Put a cross where they clicked.
-hold on;
-plot(x, y, 'w+', 'MarkerSize', 50);
-% Get the location they click on.
-row = uint8(y);
-column = uint8(x);
-disp(row)
-disp(column)
-close all;
-
-% Now, given a location on the contour
-contour = bwtraceboundary(gaussianBlurImage2, [double(row) column], 'W', 8, Inf, 'counterclockwise');
-hold on;
-plot(contour(:,2),contour(:,1),'g','LineWidth',2);
+im = gaussianBlurImage2;
+im_fill = imfill(im, 'holes');
+s = regionprops(im_fill, 'Area', 'PixelList');
+[~,ind] = max([s.Area]);
+pix = sub2ind(size(im), s(ind).PixelList(:,2), s(ind).PixelList(:,1));
+out = zeros(size(im));
+out(pix) = im(pix);
+imshow(out);
 
 
+% %zoom on;
+% %pause() % you can zoom with your mouse and when your image is okay, you press any key
+% %zoom off; % to escape the zoom mode
+% [x, y] = ginput(1);
+% %zoom out; % go to the original size of your image
+% close all;
+% % % 9. Contour search
+% % title('Please click on the edge of the indent', 'FontSize', 20);
+% % %set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
+% % [x,y] = ginput(1);
+% % % Put a cross where they clicked.
+% % hold on;
+% % plot(x, y, 'b+', 'MarkerSize', 50);
+% % % Get the location they click on.
+% disp(int64(y))
+% disp(int64(x))
+% row = double(int64(y));
+% column = double(int64(x));
+% 
+% imcontour(complementImage);
+% % %close all;
+% % 
+% % % Now, given a location on the contour
+% contour = bwtraceboundary(gaussianBlurImage2, [row column], 'W', 8, Inf, 'counterclockwise');
+% % hold on;
+% plot(contour(:,2),contour(:,1),'g','LineWidth',2);
+% % 
+% % 
