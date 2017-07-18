@@ -38,7 +38,7 @@ dilateImage3 = imdilate(erodeImage3, kernel);
 
 % 6. Binarize image
 binaryImage = imbinarize(dilateImage3,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
-%imshow(binaryImage);
+imshow(binaryImage);
 
 % 7. Canny edge detect
 cannyImage = edge(binaryImage, 'canny');
@@ -52,6 +52,7 @@ complementImage = imcomplement(gaussianBlurImage2);
 
 % 9. Binarize image again
 binaryImage2 = imbinarize(gaussianBlurImage2,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
+%imshow(binaryImage2);
 
 % 10. https://stackoverflow.com/questions/28614074/how-to-select-the-largest-contour-in-matlab
 % Select the largest contour in the selected area.
@@ -62,7 +63,7 @@ s = regionprops(im_fill, 'Area', 'PixelList');
 pix = sub2ind(size(im), s(ind).PixelList(:,2), s(ind).PixelList(:,1));
 out = zeros(size(im));
 out(pix) = im(pix);
-imshow(out);
+%imshow(out);
 
 % Return the pixel area of this image.
 disp(ind)
