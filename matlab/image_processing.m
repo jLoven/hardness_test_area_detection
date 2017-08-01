@@ -2,7 +2,7 @@
 % 14 July 2017
 
 clear all;
-original = imread('/Users/platypus/Desktop/sample_indent_2 2.jpg');
+original = imread('/Users/platypus/Desktop/testing.png');
 originalCopy = original;
 %croppedImage = imcrop(originalCopy);
 
