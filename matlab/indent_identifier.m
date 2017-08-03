@@ -1,7 +1,7 @@
 % Jackie Loven
 % 27 July 2017
 
-original = imread('/Users/platypus/Desktop/final_metallized_images/after/2942_2_after.png');
+original = imread('/Users/platypus/Desktop/700_HV_Test/490.3_4_edit.png');
 originalCopy = original;
 originalCopy2 = original;
 
