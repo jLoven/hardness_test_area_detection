@@ -1,28 +1,41 @@
 % Jackie Loven
 % 3 August 2017
-% Indent Identifier. All Rights Reserved.
-% Need a relatively high-contrast image of an indent.
+% Metal Indent Identifier. All Rights Reserved.
+% Need a high-contrast image of an indent in metal.
 % Also need to image a reticule using Reticle Measurer to find microns per
 % pixel.
-
-original = imread('/Users/platypus/Desktop/mse_4920/images/final_metallized_images/after/2942_4_after.png');
+original = imread('/Users/platypus/Desktop/mse_4920/images/700_HV_test/490.3_3_edit.png');
 originalCopy = original;
 originalCopy2 = original;
 
 % 1. Convert to grayscale
 grayscaleImage = rgb2gray(originalCopy);
+kernel = strel('square', 2);
+dilateImage = imdilate(grayscaleImage, kernel);
 
 % 2. Erode, dilate image
-kernel = strel('square', 8);
-erodeImage = imerode(grayscaleImage, kernel);
-kernel2 = strel('square', 8);
-dilateImage1 = imdilate(erodeImage, kernel2);
+% kernel = strel('square', 8);
+% erodeImage = imerode(grayscaleImage, kernel);
+% kernel2 = strel('square', 8);
+% dilateImage1 = imdilate(erodeImage, kernel2);
+
+kernel = 3;
+sigma = 0.3 * ((kernel - 1) * 0.5 - 1) + 0.8;
+gaussianBlurImage1 = imgaussfilt(dilateImage, sigma);
 
 % 3. Binarize image
-binaryImage = imbinarize(dilateImage1,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
+binaryImage = imbinarize(gaussianBlurImage1,'adaptive','ForegroundPolarity','dark','Sensitivity',0.35);
+
+kernel = strel('square', 3);
+dilateImage1 = imdilate(binaryImage, kernel);
+kernel2 = strel('square', 2);
+erodeImage1 = imerode(dilateImage1, kernel);
+dilateImage2 = imdilate(erodeImage1, kernel);
+
+
 
 % 4. Canny edge detect
-cannyImage = edge(binaryImage, 'canny');
+cannyImage = edge(dilateImage2, 'canny');
 cannyImageCast = +cannyImage;
 
 % 5. Binarize image again
