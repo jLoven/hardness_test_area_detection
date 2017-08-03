@@ -2,7 +2,7 @@
 %  Have the user click several points on the scale bar and input how far apart they are,
 %  take an average.
 
-original = imread('/Users/platypus/Desktop/mse_4920/hardness_test_area_detection/data/afm/redone_AFM/2942_4.png');
+original = imread('/Users/platypus/Desktop/final_metallized_images/245.2_1_after.png');
 %original = imread('/Users/platypus/Desktop/mask_largest_1.jpg');
 originalCopy = original;
 secondCopy = original;
