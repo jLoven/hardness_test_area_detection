@@ -1,5 +1,8 @@
-%  Jackie Loven
-
+% Jackie Loven
+% 3 August 2017
+% Reticle Measurer. All Rights Reserved.
+% Take a picture of a reticle at the same microscope settings and resolution
+% as your indents.
 
 reticle = imread('/Users/platypus/Desktop/final_metallized_images/reticle.png');
 reticleCopy = reticle;
