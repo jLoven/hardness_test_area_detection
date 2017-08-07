@@ -21,12 +21,15 @@ dilateImage1 = imdilate(erodeImage, kernel2);
 % 3. Binarize image
 binaryImage = imbinarize(dilateImage1,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
 
+
 % 4. Canny edge detect
 cannyImage = edge(binaryImage, 'canny');
 cannyImageCast = +cannyImage;
+imshow(cannyImageCast);
 
 % 5. Binarize image again
 binaryImage2 = imbinarize(cannyImageCast,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
+imshow(binaryImage2);
 
 % 6. https://stackoverflow.com/questions/28614074/how-to-select-the-largest-contour-in-matlab
 % Select the largest contour in the selected area.
