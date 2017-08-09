@@ -5,7 +5,6 @@
 % scale bar to identify pixels per area.
 
 original = imread('/Users/platypus/Desktop/mse_4920/images/afm/redone_masks_2/2942_4_edit.png');
-%original = imread('/Users/platypus/Desktop/mask_largest_1.jpg');
 originalCopy = original;
 secondCopy = original;
 [width, height, z1] = size(originalCopy);
@@ -38,8 +37,7 @@ for i = 1:width
         second = originalCopy(i, j, 2) <= 30 && originalCopy(i, j, 2) >= 0;
         third = originalCopy(i, j, 3) <= 30 && originalCopy(i, j, 3) >= 0;
         if not(first && second && third)
-            % turn everything not red into white, then find largest contour
-            % turn everything red to black.
+            % turn everything not red into black, then find largest contour
             blankImage(i, j, 1) = 0;
             blankImage(i, j, 2) = 0;
             blankImage(i, j, 3) = 0;
@@ -48,15 +46,14 @@ for i = 1:width
 end
 
 %  Find largest contour. Adaptive binarization on grayscale image.
-%  Code taken from indent_identifier.m by Jackie Loven.
 grayscaleImage = rgb2gray(blankImage);
 cannyImage = edge(grayscaleImage, 'Canny', 0);
 cannyImageCast = +cannyImage;
-binaryImage2 = imbinarize(cannyImageCast,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
+binaryImage = imbinarize(cannyImageCast,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
 
 % https://stackoverflow.com/questions/28614074/how-to-select-the-largest-contour-in-matlab
 % Select the largest contour in the selected area.
-im = binaryImage2;
+im = binaryImage;
 im_fill = imfill(im, 'holes');
 s = regionprops(im_fill, 'Area', 'PixelList');
 [~,ind] = max([s.Area]);
