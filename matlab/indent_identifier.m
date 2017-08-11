@@ -5,7 +5,7 @@
 % Also need to image a reticule using Reticle Measurer to find microns per
 % pixel.
 
-original = imread('/Users/platypus/Desktop/mse_4920/images/final_metallized_images/after/2942_1_after.png');
+original = imread('/Users/platypus/Desktop/mse_4920/images/final_metallized_images/after/2942_4_after_edit.png');
 originalCopy = original;
 originalCopy2 = original;
 
@@ -13,13 +13,17 @@ originalCopy2 = original;
 grayscaleImage = rgb2gray(originalCopy);
 
 % 2. Erode, dilate image
-kernel = strel('square', 8);
-erodeImage = imerode(grayscaleImage, kernel);
-kernel2 = strel('square', 8);
-dilateImage1 = imdilate(erodeImage, kernel2);
+% kernel = strel('square', 8);
+% erodeImage = imerode(grayscaleImage, kernel);
+ kernel2 = strel('square', 4);
+ dilateImage1 = imdilate(grayscaleImage, kernel2);
+% figure;
+% imshow(dilateImage1);
 
 % 3. Binarize image
-binaryImage = imbinarize(dilateImage1,'adaptive','ForegroundPolarity','dark','Sensitivity',0.4);
+binaryImage = imbinarize(dilateImage1,'adaptive','ForegroundPolarity','dark','Sensitivity',0.55);
+figure;
+imshow(binaryImage);
 
 % 4. Canny edge detect
 cannyImage = edge(binaryImage, 'canny');
