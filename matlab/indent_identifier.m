@@ -6,7 +6,8 @@
 % pixel.
 
 close all;
-original = imread('/Users/platypus/Desktop/mse_4920/images/final_metallized_images/after/2942_4_after.png');
+clear all;
+original = imread('/Users/platypus/Desktop/mse_4920/images/final_metallized_images/after/490.3_4_after.png');
 originalCopy = original;
 originalCopy2 = original;
 
@@ -49,7 +50,7 @@ end
 
 imshow(originalCopy2);
 % Save this image in same resolution.
-imwrite(originalCopy2, '/Users/platypus/Desktop/mse_4920/images/final_metallized_images/after_analyzed/2942_4.png');
+%imwrite(originalCopy2, '/Users/platypus/Desktop/mse_4920/images/final_metallized_images/after_analyzed/490.3_4.png');
 
 % 8. Calculate indent area based on previous measurements of a reticle.
 micronsPerPixel = 0.18694;

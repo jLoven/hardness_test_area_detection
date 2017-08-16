@@ -1,16 +1,17 @@
 % Jackie Loven
 % 16 August 2017
-% CLSM Masked Area Identifier. All Rights Reserved.
-% Just for profiler diagonals.
-% Mask indent area in a CLSM image in green, and click several points on the 
-% scale bar to identify pixels per area with reticle measurer for CLSM.
+% CLSM and Metallization Masked Area Identifier. All Rights Reserved.
+% Just for diagonals.
+% Mask indent area in a CLSM/ metallized image in green, and use a reticle
+% or scale bar measurer to get micronsPerPixel.
 
 clear all;
 close all;
-original = imread('/Users/platypus/Desktop/mse_4920/images/laser_profiler/2942_1_masked.png');
+original = imread('/Users/platypus/Desktop/mse_4920/images/final_metallized_images/after_analyzed/2942_4.png');
 originalCopy = original;
 
-micronsPerPixel = 0.0600;
+% Measure a reticle:
+micronsPerPixel = 0.18694;
 
 figure('name','Please click the four indent vertices in clockwise order.');
 imshow(originalCopy);
@@ -50,4 +51,6 @@ avgDiagInMicrons = avgDiag * micronsPerPixel;
 diagonalArea = avgDiagInMicrons^2 * 0.5;
 totalString = strcat(num2str(diagonalArea), ' sq. µm for diagonals');
 disp(totalString);
+
+
 
