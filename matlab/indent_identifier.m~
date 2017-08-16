@@ -16,6 +16,8 @@ grayscaleImage = rgb2gray(originalCopy);
 % 2. Dilate
  kernel2 = strel('square', 4);
  dilateImage1 = imdilate(grayscaleImage, kernel2);
+% figure;
+% imshow(dilateImage1);
 
 % 3. Binarize image
 binaryImage = imbinarize(dilateImage1,'adaptive','ForegroundPolarity','dark','Sensitivity',0.55);

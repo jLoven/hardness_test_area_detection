@@ -1,5 +1,5 @@
 % Jackie Loven
-% 9 August 2017
+% 16 August 2017
 % CLSM Masked Area Identifier. All Rights Reserved.
 % Just for profiler diagonals.
 % Mask indent area in a CLSM image in green, and click several points on the 

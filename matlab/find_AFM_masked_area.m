@@ -1,5 +1,5 @@
 % Jackie Loven
-% 9 August 2017
+% 16 August 2017
 % AFM Masked Area Identifier. All Rights Reserved.
 % Mask indent area in an AFM image in red, and click several points on the 
 % scale bar to identify pixels per area.
