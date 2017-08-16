@@ -1,10 +1,10 @@
 % Jackie Loven
 % 9 August 2017
-% AFM Masked Area Identified. All Rights Reserved.
+% AFM Masked Area Identifier. All Rights Reserved.
 % Mask indent area in an AFM image in red, and click several points on the 
 % scale bar to identify pixels per area.
 
-original = imread('/Users/platypus/Desktop/mse_4920/images/afm/redone_masks_2/245.2_4.png');
+original = imread('/Users/platypus/Desktop/mse_4920/images/afm/redone_masks_2/245.2_1.png');
 originalCopy = original;
 secondCopy = original;
 [width, height, z1] = size(originalCopy);
@@ -111,11 +111,4 @@ avgDiagInMicrons = avgDiag * micronsPerPixel;
 diagonalArea = avgDiagInMicrons^2 * 0.5;
 totalString2 = strcat(num2str(diagonalArea), ' sq. µm for diagonals');
 disp(totalString2);
-
-
-
-% Calculate diagonals 
-
-
-
 
